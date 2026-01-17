@@ -132,8 +132,8 @@ python analyze_image.py
 ## Kết quả
 
 Mô hình V10 Balanced đạt được kết quả tốt nhất với:
-- Accuracy trên tập test: ~85-90%
-- Khoảng cách giữa train và test: ~3-5%
+- Accuracy trên tập test: ~71%
+- Khoảng cách giữa train và test: ~13%
 
 ## Yêu cầu hệ thống
 
