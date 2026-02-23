@@ -2,17 +2,17 @@
    Vietnamese Food Classification – App Logic
    ───────────────────────────────────────────────────────── */
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://vietnamese-food-classification.onrender.com";
 
 // ── Food metadata (emoji + display name) ─────────────────
 const FOOD_META = {
-  "banh chung":          { emoji: "🍱", display: "Bánh Chưng" },
-  "banh mi":             { emoji: "🥖", display: "Bánh Mì" },
-  "banh xeo":            { emoji: "🥞", display: "Bánh Xèo" },
-  "bun bo hue":          { emoji: "🍜", display: "Bún Bò Huế" },
-  "bun dau mam tom":     { emoji: "🍲", display: "Bún Đậu Mắm Tôm" },
-  "cha gio":             { emoji: "🥟", display: "Chả Giò" },
-  "chao long":           { emoji: "🥣", display: "Cháo Lòng" },
+  "banh chung": { emoji: "🍱", display: "Bánh Chưng" },
+  "banh mi": { emoji: "🥖", display: "Bánh Mì" },
+  "banh xeo": { emoji: "🥞", display: "Bánh Xèo" },
+  "bun bo hue": { emoji: "🍜", display: "Bún Bò Huế" },
+  "bun dau mam tom": { emoji: "🍲", display: "Bún Đậu Mắm Tôm" },
+  "cha gio": { emoji: "🥟", display: "Chả Giò" },
+  "chao long": { emoji: "🥣", display: "Cháo Lòng" },
 };
 
 // Fallback: try to match normalized class_name against known keys
@@ -38,24 +38,24 @@ function getMeta(className) {
 }
 
 // ── Element refs ─────────────────────────────────────────
-const dropZone       = document.getElementById("dropZone");
-const dropInner      = document.getElementById("dropInner");
+const dropZone = document.getElementById("dropZone");
+const dropInner = document.getElementById("dropInner");
 const previewOverlay = document.getElementById("previewOverlay");
-const previewImg     = document.getElementById("previewImg");
-const fileInput      = document.getElementById("fileInput");
-const btnRemove      = document.getElementById("btnRemove");
-const btnPredict     = document.getElementById("btnPredict");
-const btnLabel       = document.getElementById("btnLabel");
-const btnSpinner     = document.getElementById("btnSpinner");
-const alertError     = document.getElementById("alertError");
-const resultIdle     = document.getElementById("resultIdle");
-const resultContent  = document.getElementById("resultContent");
-const resultClass    = document.getElementById("resultClass");
-const resultConf     = document.getElementById("resultConfidence");
-const probList       = document.getElementById("probList");
-const classesGrid    = document.getElementById("classesGrid");
-const statusDot      = document.getElementById("statusDot");
-const statusText     = document.getElementById("statusText");
+const previewImg = document.getElementById("previewImg");
+const fileInput = document.getElementById("fileInput");
+const btnRemove = document.getElementById("btnRemove");
+const btnPredict = document.getElementById("btnPredict");
+const btnLabel = document.getElementById("btnLabel");
+const btnSpinner = document.getElementById("btnSpinner");
+const alertError = document.getElementById("alertError");
+const resultIdle = document.getElementById("resultIdle");
+const resultContent = document.getElementById("resultContent");
+const resultClass = document.getElementById("resultClass");
+const resultConf = document.getElementById("resultConfidence");
+const probList = document.getElementById("probList");
+const classesGrid = document.getElementById("classesGrid");
+const statusDot = document.getElementById("statusDot");
+const statusText = document.getElementById("statusText");
 
 // ── State ─────────────────────────────────────────────────
 let selectedFile = null;
@@ -83,7 +83,7 @@ async function checkHealth() {
 function setStatus(state) {
   statusDot.className = "badge-dot " + state;
   const labels = {
-    online:  "Model sẵn sàng",
+    online: "Model sẵn sàng",
     loading: "Model đang tải...",
     offline: "Server offline",
   };
@@ -238,8 +238,8 @@ function renderResult(data) {
 // ── Helpers ───────────────────────────────────────────────
 function setLoading(isLoading) {
   btnPredict.disabled = isLoading;
-  btnLabel.hidden     = isLoading;
-  btnSpinner.hidden   = !isLoading;
+  btnLabel.hidden = isLoading;
+  btnSpinner.hidden = !isLoading;
 }
 
 function showError(msg) {
@@ -252,7 +252,7 @@ function clearError() {
 }
 
 function clearResult() {
-  resultIdle.hidden    = false;
+  resultIdle.hidden = false;
   resultContent.hidden = true;
   resultContent.classList.remove("slide-in");
   document.querySelectorAll(".class-chip").forEach(c => c.classList.remove("active"));
