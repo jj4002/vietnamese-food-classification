@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv
+venv/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Dataset (Very large files)
+dataset/
+*.zip
+*.csv
+crawl_image/images/
+
+# Models (Binary files)
+models/*.pkl
+models/*.pth
+models/*.h5
+checkpoint_model_*.pkl
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+.directory
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+.dockerignore
+# Don't ignore docker-compose.yml or Dockerfile

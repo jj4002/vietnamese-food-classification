@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phân Loại Món Ăn Việt Nam – AI Demo</title>
+    <meta name="description"
+        content="Demo ứng dụng phân loại món ăn Việt Nam bằng Machine Learning (SVM Ensemble V10). Upload ảnh và nhận kết quả ngay lập tức." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <!-- Background blobs -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <span class="logo-icon">🍜</span>
+                <div>
+                    <span class="logo-title">VietFood AI</span>
+                    <span class="logo-sub">Phân loại món ăn Việt Nam</span>
+                </div>
+            </div>
+            <div class="header-badge">
+                <span class="badge-dot" id="statusDot"></span>
+                <span id="statusText">Đang kết nối...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1 class="hero-title">
+                Nhận diện <span class="gradient-text">Món Ăn Việt</span><br />bằng trí tuệ nhân tạo
+            </h1>
+            <p class="hero-desc">
+                Upload ảnh món ăn và mô hình SVM Ensemble (V10 Balanced Final) sẽ phân loại
+                trong tích tắc với độ chính xác ~71%.
+            </p>
+        </section>
+
+        <!-- Upload + Result Grid -->
+        <div class="content-grid">
+
+            <!-- Upload Card -->
+            <div class="card upload-card">
+                <h2 class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    Upload ảnh
+                </h2>
+
+                <!-- Drop zone -->
+                <div class="drop-zone" id="dropZone">
+                    <div class="drop-inner" id="dropInner">
+                        <div class="drop-icon">📸</div>
+                        <p class="drop-main">Kéo & thả ảnh vào đây</p>
+                        <p class="drop-sub">hoặc</p>
+                        <label class="btn-upload" for="fileInput">Chọn ảnh từ máy</label>
+                        <input type="file" id="fileInput" accept="image/*" hidden />
+                        <p class="drop-hint">JPG, PNG, WEBP – tối đa 10 MB</p>
+                    </div>
+                    <!-- Preview overlay -->
+                    <div class="preview-overlay" id="previewOverlay" hidden>
+                        <img id="previewImg" class="preview-img" alt="Preview" />
+                        <button class="btn-remove" id="btnRemove" title="Xóa ảnh">✕</button>
+                    </div>
+                </div>
+
+                <!-- Predict button -->
+                <button class="btn-predict" id="btnPredict" disabled>
+                    <span id="btnLabel">Phân tích ảnh</span>
+                    <span class="btn-spinner" id="btnSpinner" hidden>
+                        <svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path
+                                d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                        </svg>
+                    </span>
+                </button>
+
+                <!-- Error -->
+                <div class="alert-error" id="alertError" hidden></div>
+            </div>
+
+            <!-- Result Card -->
+            <div class="card result-card" id="resultCard">
+                <!-- Idle state -->
+                <div class="result-idle" id="resultIdle">
+                    <div class="idle-icon">🔍</div>
+                    <p class="idle-text">Kết quả sẽ xuất hiện tại đây sau khi bạn upload ảnh và nhấn <strong>Phân tích
+                            ảnh</strong>.</p>
+                </div>
+
+                <!-- Result state -->
+                <div class="result-content" id="resultContent" hidden>
+                    <div class="result-header">
+                        <div class="result-badge">AI Prediction</div>
+                        <h3 class="result-class" id="resultClass">–</h3>
+                        <div class="result-confidence" id="resultConfidence">–</div>
+                    </div>
+
+                    <div class="result-divider"></div>
+
+                    <h4 class="prob-title">Xác suất tất cả lớp</h4>
+                    <div class="prob-list" id="probList"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Food Classes Section -->
+        <section class="classes-section">
+            <h2 class="section-title">Các món ăn được hỗ trợ</h2>
+            <div class="classes-grid" id="classesGrid">
+                <!-- populated by JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>🎓 Đồ án Môn Machine Learning – PTITHCM &nbsp;|&nbsp; Model: V10 Balanced Final (SVM Ensemble)</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,156 +1,92 @@
-# Vietnamese Food Classification
+# 🍜 Phân loại món ăn Việt Nam (Vietnamese Food Classification)
 
-Đồ án môn Machine Learning PTITHCM. Sử dụng Machine Learning để phân loại các món ăn Việt Nam từ hình ảnh.
 
-## Các món ăn được phân loại
+## 📸 Các món ăn hỗ trợ phân loại
+Hệ thống hiện tại có thể nhận diện:
+*   **Bánh chưng, Bánh mì, Bánh xèo, Bún bò Huế, Bún đậu mắm tôm, Chả giò, Cháo lòng.**
 
-- Bánh chưng
-- Bánh mì
-- Bánh xèo
-- Bún bò Huế
-- Bún đậu mắm tôm
-- Chả giò
-- Cháo lòng
+---
 
-## Cấu trúc dự án
+## �️ Cài đặt môi trường
 
-```
-vietnamese-food-classification/
-├── dataset/
-│   └── Train/           # Dữ liệu huấn luyện
-├── crawl_image/         # Script thu thập dữ liệu
-├── train/               # Mô hình huấn luyện
-├── analyze_image.py     # Phân tích và trích xuất đặc trưng ảnh
-├── requirements.txt     # Các thư viện cần thiết
-└── README.md
-```
+Yêu cầu: **Python 3.9+**
 
-## Cài đặt
+1.  Cài đặt các thư viện cần thiết:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-```bash
-pip install -r requirements.txt
-```
+2.  (Tùy chọn) Cài đặt riêng cho backend:
+    ```bash
+    pip install -r backend/requirements.txt
+    ```
 
-## Các phiên bản mô hình
+---
 
-### V1 - Baseline
-Sử dụng SVM RBF với SMOTE để cân bằng dữ liệu.
+## 🏗️ Cấu trúc dự án
+*   **`dataset/`**: Chứa dữ liệu ảnh thu thập được (bản zip và thư mục giải nén).
+*   **`analyze/`**: Chứa script `analyze_image.py` dùng để phân tích các đặc trưng (Histogram, HOG, LBP, Edge, SIFT) trước khi huấn luyện.
+*   **`crawl_image/`**: Bộ công cụ thu thập dữ liệu tự động từ Flickr và iStockphoto.
+*   **`training/`**: Chứa các phiên bản mô hình từ V1 đến V10.
+*   **`models/`**: Lưu trữ model đã được đóng gói (`.pkl`).
+*   **`backend/`**: API xử lý nhận diện (FastAPI).
+*   **`frontend/`**: Giao diện người dùng đơn giản (HTML/CSS/JS).
 
-### V4 - Ensemble
-Kết hợp nhiều mô hình Machine Learning:
-- SVM RBF
-- SVM Linear
-- Random Forest
-- Extra Trees
-- XGBoost/Gradient Boosting
-- KNN
-- Logistic Regression
+---
 
-### V10 - Balanced Final (Mô hình tốt nhất)
-SVM Ensemble với các kỹ thuật chống overfitting:
-- Feature noise
-- Feature dropout
-- Subsampling
-- Ensemble 3 mô hình SVM
+## 🧪 Quy trình thực hiện
 
-## Huấn luyện mô hình
-
-```bash
-# V1 - Baseline
-python train/V1_Baseline.py
-
-# V4 - Ensemble
-python train/V4_Ensemble.py
-
-# V10 - Balanced Final (khuyên dùng)
-python train/V10_Balanced_Final.py
-```
-
-## Sử dụng mô hình
-
-```python
-import pickle
-import cv2
-
-# Load mô hình
-with open('v10_balanced.pkl', 'rb') as f:
-    model_data = pickle.load(f)
-
-# Dự đoán
-classifier = FoodClassifierSVM_Balanced('dataset/Train')
-classifier.load_model('v10_balanced.pkl')
-predicted_class, confidence = classifier.predict('path/to/image.jpg')
-
-print(f"Predicted: {predicted_class} with {confidence:.1f}% confidence")
-```
-
-## Thu thập dữ liệu
-
+### 1. Thu thập dữ liệu
+Nếu bạn muốn mở rộng dataset:
 ```bash
 cd crawl_image
-
-# Crawl từ Flickr
+# Thu thập từ Flickr
 python crawl_flickr.py
-
-# Crawl từ iStockphoto
+# Hoặc iStockphoto
 python crawl_istockphoto.py
-
-# Tải ảnh từ CSV
-python download_images.py
 ```
 
-## Phân tích ảnh
-
+### 2. Phân tích đặc trưng (Feature Extraction)
+Đây là bước quan trọng để hiểu dữ liệu trước khi train:
 ```bash
-python analyze_image.py
+python analyze/analyze_image.py
 ```
+Script này sẽ trích xuất và so sánh: Color Features (RGB, HSV, LAB), Texture (LBP, HOG), Shape (SIFT),...
 
-Điều này sẽ tạo báo cáo chi tiết về:
-- Kích thước ảnh trước/sau khi resize
-- Thống kê pixel theo từng kênh màu
-- Các đặc trưng (histogram, HOG, LBP, Edge, SIFT)
-- Biểu đồ so sánh trực quan
+### 3. Huấn luyện mô hình
+Project sử dụng mô hình **V10 Balanced Final (SVM Ensemble)** để đạt kết quả tốt nhất và tránh Overfitting:
+```bash
+python training/V10/V10_Balanced_Final.py
+```
+hoặc bản không có **cuml (gpu)**
+```bash
+python training/V10_CPU/v10_balanced_cpu.py
+``` 
 
-## Các đặc trưng được sử dụng
 
-### Color Features
-- RGB Histogram (32 bins)
-- HSV Histogram (32 bins)
-- LAB Histogram (24 bins)
-- Color Moments (Mean, Std, Skewness)
-- Color Ratios
+---
 
-### Texture Features
-- HOG (Histogram of Oriented Gradients)
-- LBP (Local Binary Pattern)
-- Edge Histogram (Canny)
-- Sobel/Laplacian gradients
+## � Chạy ứng dụng
 
-### Shape Features
-- SIFT keypoints và descriptors
+### Khởi động API (Backend)
+```bash
+cd backend
+python run_server.py
+```
+API sẽ chạy tại `http://127.0.0.1:8000`. Bạn có thể xem tài liệu API tại `http://127.0.0.1:8000/docs`.
 
-## Kết quả
+### Giao diện người dùng (Frontend)
+Mở trực tiếp file `frontend/index.html` trong trình duyệt để sử dụng giao diện web, tải ảnh lên và nhận kết quả phân loại.
 
-Mô hình V10 Balanced đạt được kết quả tốt nhất với:
-- Accuracy trên tập test: ~71%
-- Khoảng cách giữa train và test: ~13%
+---
 
-## Yêu cầu hệ thống
+## � Kết quả đạt được
+Mô hình **V10** đạt độ chính xác khoảng **71%** trên tập kiểm thử (Test set), với sự kết hợp của nhiều loại đặc trưng và kỹ thuật Ensemble 3 mô hình SVM độc lập.
 
-- Python 3.7+
-- 8GB RAM
-- GPU hỗ trợ CUDA (tùy chọn, để huấn luyện nhanh hơn)
+---
 
-## Thư viện chính
+## 📜 License
+Dự án được phát hành dưới bản quyền [MIT License](LICENSE).
 
-- scikit-learn - Machine Learning
-- opencv-python - Xử lý ảnh
-- numpy - Tính toán
-- pandas - Xử lý dữ liệu
-- matplotlib/seaborn - Trực quan hóa
-- imbalanced-learn - Cân bằng dữ liệu
-- requests/undetected-playwright - Web scraping
-
-## License
-
-MIT License
+---
+*Thực hiện bởi nhóm sinh viên phục vụ cho môn Machine Learning tại trường, không sử dụng cho mục đích thương mại.*
