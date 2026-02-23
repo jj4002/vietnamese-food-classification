@@ -56,4 +56,3 @@ Thumbs.db
 
 # Docker
 .dockerignore
-# Don't ignore docker-compose.yml or Dockerfile
