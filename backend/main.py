@@ -46,7 +46,48 @@ app.add_middleware(
 # Model paths
 # ──────────────────────────────────────────
 BASE_DIR = Path(__file__).resolve().parent.parent
-MODEL_PATH = BASE_DIR / "models" / "v10_balanced_cpu.pkl"
+
+from huggingface_hub import hf_hub_download
+from pathlib import Path
+import os
+
+HF_REPO_ID_DEFAULT = "jamus0702/vn_food_classification"
+
+def resolve_model_path() -> Path:
+    """
+    Ưu tiên local file nếu có (MODELS_DIR/MODEL_FILENAME hoặc MODEL_PATH),
+    nếu không có thì tải từ Hugging Face Hub và dùng cache.
+    """
+    # 1) Nếu bạn muốn chỉ định thẳng path local (dev/prod đều ok)
+    env_model_path = os.getenv("MODEL_PATH", "").strip()
+    if env_model_path:
+        p = Path(env_model_path)
+        if p.exists():
+            return p
+
+    # 2) Tìm file local theo thư mục models (mặc định ./models)
+    models_dir = Path(os.getenv("MODELS_DIR", "models"))
+    filename = os.getenv("MODEL_FILENAME", "v10_balanced_cpu.pkl")
+    local_candidate = models_dir / filename
+    if local_candidate.exists():
+        return local_candidate
+
+    # 3) Không có local → tải từ HF (cache)
+    # Có thể đổi cache bằng HF_HOME hoặc HF_HUB_CACHE nếu cần. [web:40][web:41]
+    hf_repo_id = os.getenv("HF_REPO_ID", HF_REPO_ID_DEFAULT)
+    hf_filename = os.getenv("HF_FILENAME", filename)
+    hf_token = os.getenv("HF_TOKEN")  # chỉ cần nếu repo private
+
+    downloaded_path = hf_hub_download(
+        repo_id=hf_repo_id,
+        filename=hf_filename,
+        repo_type="model",
+        token=hf_token,
+    )
+    return Path(downloaded_path)
+
+MODEL_PATH = resolve_model_path()
+
 
 # ──────────────────────────────────────────
 # Model state (loaded once at startup)
